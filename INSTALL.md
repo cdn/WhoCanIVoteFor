@@ -1,18 +1,20 @@
 WCIVF requires Python 3.
 
-To install:
+To install on Ubuntu 14.0.x (masochistically):
 
     sudo apt-get install python3-dev libpq-dev libjpeg-dev redis-server
+    sudo apt-get install ruby
     sudo gem install --no-ri --no-rdoc sass -v 3.4.21
-    pip install -r requirements/local.txt
+    sudo apt-get install python3-ipdb python3-pip
+    pip3 install -r requirements/local.txt
 
 Create a Postgres database as detailed below, then:
 
-    python manage.py migrate
-    python manage.py import_elections
-    manage.py import_posts
-    manage.py import_parties
-    manage.py import_people
+    ./manage.py migrate
+    ./manage.py import_elections
+    ./manage.py import_posts
+    ./manage.py import_parties
+    ./manage.py import_people
 
 If you don't want to install Redis for some reason (like e.g. laziness) you can override
 the cache backend with a file at `./wcivf/settings/local.py` with the following:
@@ -39,7 +41,10 @@ Set the password to, for example, `wcivf`. Then create the database, owned by th
 
 Finally, add the PostGIS extension to the database:
 
+    sudo apt-get install postgresql-9.3-postgis-scripts #*
     sudo -u postgres psql -d wcivf -c "CREATE EXTENSION postgis;"
+
+(* via [Stack Overflow](https://stackoverflow.com/questions/34134207/postgres-9-3-10-usr-share-postgresql-9-3-extension-postgis-control))
 
 Then, create a file `wcivf/settings/local.py` with the following contents, assuming you used the same username, password and database name as above:
 
@@ -48,7 +53,7 @@ Then, create a file `wcivf/settings/local.py` with the following contents, assum
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': 'wcivf',
             'USER': 'wcivf',
-            'PASSWORD': 'wcivf',
+            'PASSWORD': '*****',
             'HOST': 'localhost',
             'PORT': '',
         }
